@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import profamilia.prueba.dto.EmployRequestDTO;
 import profamilia.prueba.dto.EmployResponseDTO;
+import profamilia.prueba.exception.ConflictException;
+import profamilia.prueba.exception.ResourceNotFoundException;
 import profamilia.prueba.mapper.EmployMapper;
 import profamilia.prueba.model.EmployEntity;
 import profamilia.prueba.repository.EmployRepository;
@@ -39,11 +41,11 @@ public class EmployServiceImpl implements EmployService {
     @Transactional
     public EmployResponseDTO updateEmployeeStatus(Long id, Boolean present) {
         EmployEntity employee = employRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
 
         if (employee.getPresent().equals(present)) {
             String status = present ? "active (present)" : "inactive (absent)";
-            throw new IllegalStateException("Employee is already " + status);
+            throw new ConflictException("Employee is already " + status);
         }
 
         employRepository.updateStatusById(id, present);

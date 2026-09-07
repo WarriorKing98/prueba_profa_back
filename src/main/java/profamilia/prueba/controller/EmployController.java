@@ -35,13 +35,8 @@ public class EmployController {
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<?> updateEmployeeStatus(@PathVariable Long id, @RequestBody Boolean present) {
-        try {
-            return ResponseEntity.ok(employService.updateEmployeeStatus(id, present));
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<EmployResponseDTO> updateEmployeeStatus(@PathVariable Long id,
+            @RequestBody Boolean present) {
+        return ResponseEntity.ok(employService.updateEmployeeStatus(id, present));
     }
 }
